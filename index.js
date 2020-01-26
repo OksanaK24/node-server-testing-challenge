@@ -6,7 +6,7 @@ const server = express()
 const port = process.env.PORT || 5000
 
 server.use(express.json())
-server.use("/api", countriesRouter)
+server.use("/api/countries", countriesRouter)
 
 server.get("/", (req, res) => {
   res.status(200).json({

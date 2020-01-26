@@ -1,7 +1,7 @@
 const db = require("../data/config")
 const supertest = require("supertest")
 const countriesModel = require("./countries-model")
-const countriesRouter = require("./countries-router")
+const server = require("../index")
 
 beforeEach(async () => {
     await db.seed.run()
@@ -42,28 +42,27 @@ describe("testing countries database", () =>{
         expect(countries).toHaveLength(7)
     })
 
-    // test("get countries list", async () => {
-    //     const res = await supertest(countriesRouter).get("/countries")
-    //     console.log(res)
-        // expect(res.status).toBe(200)
-        // expect(res.type).toBe("application/json")
-        // expect(res.body.length).toBe(8)
-        // expect(res.body[0].id).toBe(1)
-        // expect(res.body[0].country).toMatch(/poland/i)
-    // })
+    test("get countries list", async () => {
+        const res = await supertest(server).get("/api/countries")
+        expect(res.status).toBe(200)
+        expect(res.type).toBe("application/json")
+        expect(res.body.length).toBe(8)
+        expect(res.body[0].id).toBe(1)
+        expect(res.body[0].country).toMatch(/poland/i)
+    })
     
-    // test("create country", async () => {
-    //     const res = await supertest(countriesRouter)
-    //         .post("/countries")
-    //         .send({ country: "Canada", visited: 0 })
-    //     expect(res.status).toBe(201)
-    //     expect(res.type).toBe("application/json")
-    //     expect(res.body).toEqual({ id: 9, country: "Canada", visited: 0 })
-    // })
+    test("create country", async () => {
+        const res = await supertest(server)
+            .post("/api/countries")
+            .send({ country: "Canada", visited: 0 })
+        expect(res.status).toBe(201)
+        expect(res.type).toBe("application/json")
+        expect(res.body).toEqual({ id: 9, country: "Canada", visited: 0 })
+    })
 
-    // test("delete country", async (id) => {
-    //     const res = await supertest(countriesRouter)
-    //         .delete("/countries/8")
-    //     expect(res.status).toBe(204)
-    // })
+    test("delete country", async () => {
+        const res = await supertest(server)
+            .delete("/api/countries/8")
+        expect(res.status).toBe(204)
+    })
 })

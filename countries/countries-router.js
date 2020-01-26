@@ -3,7 +3,7 @@ const countriesModel = require("./countries-model")
 
 const router = express.Router()
 
-router.get("/countries", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
     try {
       const countries = await countriesModel.find()
       res.status(200).json(countries)
@@ -12,7 +12,7 @@ router.get("/countries", async (req, res, next) => {
     }
 })
   
-router.post("/countries", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
     try {
         const country = await countriesModel.insert(req.body)
         res.status(201).json(country)
@@ -21,13 +21,13 @@ router.post("/countries", async (req, res, next) => {
     }
 })
 
-router.delete("/countries/:id", async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
     try {
-      const { id } = req.params
-      const deleted = await countriesModel.remove(id)
+      const countries = await countriesModel.findById(req.params.id)
+      const deleted = await countriesModel.remove(req.params.id)
   
       if (deleted) {
-        res.status(204)
+        res.status(204).json({message: `${countries.country} has been deleted`})
       } else {
         res.status(404).json({
           message: "Could not find user with given ID",
